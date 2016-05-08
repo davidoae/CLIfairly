@@ -26,7 +26,7 @@ get_map_info(){
 	chars_on_map=$( wc -c < $map )
 
 	# -1 so we ignore the newline character
-	map_width=$(( $(( $chars_on_map / $map_height )) - 1 ))
+	map_width=$(( $chars_on_map / $map_height - 1 ))
 
 	# depending on what map the character is on, we load a different set of map functions. see map_function_conditions function
 	current_map_functions="${map_functions[$current_map_char_is_on]}"
@@ -41,6 +41,7 @@ move(){
 	# where we'll be if it all goes to plan
 	newx=$1
 	newy=$2
+# the semi-colons feel a bit weird, reluctant to remove without knowing why
 	stop_flag=;
 	grass_flag=;
 	door_flag=;
@@ -51,22 +52,22 @@ move(){
 	# stop the character escaping the map
 	if [ "$newx" -gt "$map_width" ]; then
 		newx=$(( $x - 1 ))
-    	x=$(( $x - 1 ))
+	    	x=$(( $x - 1 ))
   	elif [ "$newx" -lt 1 ]; then
-    	newx=$(( $x + 1 ))
-    	x=$(( $x + 1 ))
+	    	newx=$(( $x + 1 ))
+    		x=$(( $x + 1 ))
   	elif [ "$newy" -gt "$map_height" ]; then
-    	newy=$(( $y - 1 ))
-    	y=$(( $y - 1 ))
+    		newy=$(( $y - 1 ))
+    		y=$(( $y - 1 ))
   	elif [ "$newy" -lt 1 ]; then
-    	newy=$(( $y + 1 ))
-    	y=$(( $y + 1 ))
+    		newy=$(( $y + 1 ))
+    		y=$(( $y + 1 ))
   	fi
 
   # this function gets called from eg. pallet_town_functions.sh, when the map the char is on is 0. This function is named the same thing for every map, so going to a new map will give us new function conditions
   	map_function_conditions
 
-  	while read -r row; do
+  	while read -r row; do # i personally would indent inside this loop
 
     	if [ "$ycount" -eq "$newy" ]; then
       	# find y plane we want to be on, then read across until we get to the x value we want to be at, then write the character to that place.
@@ -155,22 +156,23 @@ right(){
 # w
 grass(){
 
-  	pokemon_appearing_chance=$(( ( RANDOM % 30 ) + 1 ))
-  	[ $pokemon_appearing_chance -gt 28 ] && echo "pokemon"
+# afaict this var pokemon_appearing_chance is only used here, so should be local
+# in general use local wherever possible in complex code
+# otherwise you encourage weird bugs
+# however here it's not needed
+	[ $(( RANDOM % 30 )) -gt 28 ] && echo "pokemon"
 }
 
 
 stop(){ # reverse last $input so it appears the char can't move through stop
 
-  	if [ "$input" == "w" ]; then
-    	down
-  	elif [ "$input" == "s" ]; then
-    	up
-  	elif [ "$input" == "a" ]; then
-    	right
-  	else
-    	left
-  	fi
+# simpler
+	case "$input" in
+		w) down	;;
+		s) up	;;
+		a) right;;
+		*) left ;;
+	esac
 }
 
 

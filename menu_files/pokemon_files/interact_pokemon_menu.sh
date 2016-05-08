@@ -17,12 +17,10 @@ display_menu() {
 	IFS_OLD=$IFS
 	IFS=""
 	count=0;
+	local line # i think not to encourages some bugs
 	while read -r line; do
 		((count++))
-		divisible_four=$(( $count % 4 ))
-		if [ "$divisible_four" -eq 0 ]; then
-			: # no-op command
-		else
+		if [ $(( $count % 4 )) -ne 0 ]; then
 			upper_limit_selection=$(( $where_selection_is + 1 ))
 			if [ "$count" -ge "$where_selection_is" -a "$count" -le "$upper_limit_selection" ]; then
 				echo $hiOn $line $hiOff
@@ -83,7 +81,7 @@ generate_submenu(){
 	echo "CANCEL" >> "$submenu"
 
 	cat "$submenu"
-	sleep 5
+	sleep 5 #?
 	rm "$submenu"
 
 }

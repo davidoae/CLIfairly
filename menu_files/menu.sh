@@ -20,6 +20,7 @@ current_menu=${menu[$menu_in_view]}
 
 menu_height=$( wc -l < $current_menu )
 
+# why not cp?
 cat $current_menu > /dev/shm/marked_menu
 
 

@@ -5,7 +5,7 @@ map_function_conditions(){
 
   	# map swaps - always have to come before stops
   	# enter leftmost house
-  	if [ "$newy" -eq 9 ]; then
+  	if [ "$newy" -eq 9 ]; then # flakey indenting
 
     	if [ "$newx" -eq 7 -o "$newx" -eq 8 ]; then
       	change_conf_value "character_files/character.cfg" "current_map_char_is_on" 2
@@ -19,13 +19,14 @@ map_function_conditions(){
   	fi
 
   	# stop being able to walk through the rightmost house
-  	if [ "$newy" -eq 6 -a "$newx" -ge 8 -a "$newx" -le 13 ]; then
-    	stop
-  	elif [ "$newy" -eq 7 -a "$newx" -ge 7 -a "$newx" -le 14 ]; then
-    	stop
-  	elif [ "$newy" -ge 8 -a "$newy" -le 9 -a "$newx" -ge 6 -a "$newx" -le 15 ]; then
-    	stop
-  	fi
+	if [ \
+		\( "$newy" -eq 6 -a "$newx" -ge 8 -a "$newx" -le 13 \) -o \
+		\( "$newy" -eq 7 -a "$newx" -ge 7 -a "$newx" -le 14 \) -o \
+		\( "$newy" -ge 8 -a "$newy" -le 9 -a "$newx" -ge 6 -a "$newx" -le 15 \) \
+	]; then
+		stop
+	fi
+
 }
 
 
